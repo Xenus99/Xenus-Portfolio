@@ -1,10 +1,8 @@
 'use client';
 
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
-import { url } from "inspector";
 
 
 // ---- Quick data model you can customize ----
@@ -115,7 +113,8 @@ const DATA = {
 };
 
 // ---- UI helpers ----
-const Section = ({ id, title, children }: any) => (
+type SectionProps = { id: string; title: string; children: ReactNode };
+const Section = ({ id, title, children }: SectionProps) => (
   <section id={id} className="scroll-mt-24 py-16" aria-label={title}>
     <div className="max-w-6xl mx-auto px-4">
       <h2 className="text-2xl md:text-3xl font-bold mb-6">{title}</h2>
@@ -124,15 +123,18 @@ const Section = ({ id, title, children }: any) => (
   </section>
 );
 
-const Pill = ({ children }: any) => (
+type PillProps = { children: ReactNode };
+const Pill = ({ children }: PillProps) => (
   <span className="inline-flex items-center text-sm px-3 py-1 rounded-full border">
     {children}
   </span>
 );
 
-const Card = ({ children }: any) => (
+type CardProps = { children: ReactNode };
+const Card = ({ children }: CardProps) => (
   <div className="rounded-2xl border p-5 shadow-sm hover:shadow transition">{children}</div>
 );
+
 
 const useScrollTop = () => {
   const [show, setShow] = useState(false);
@@ -182,12 +184,13 @@ export default function Portfolio() {
             <p className="mt-2 text-lg opacity-80">{DATA.title}</p>
             <p className="mt-6 leading-relaxed max-w-prose">{DATA.about}</p>
             <div className="mt-6 flex flex-wrap gap-2">
-              {Object.entries(DATA.skills).flatMap(([group, items]) => [
+            {Object.entries(DATA.skills).map(([group, items]) => (
                 <Pill key={group}>
-                  <strong className="mr-2">{group}:</strong> {items.join(", ")}
-                </Pill>,
-              ])}
+                <strong className="mr-2">{group}:</strong> {items.join(", ")}
+                </Pill>
+            ))}
             </div>
+
           </motion.div>
           <motion.div
             className="aspect-[4/3] rounded-2xl border"
@@ -204,8 +207,8 @@ export default function Portfolio() {
       <Section id="education" title="Education">
         <div className="grid md:grid-cols-2 gap-4">
           {DATA.education.map((ed, idx) => (
-            <a href={ed.url} target="_blank" rel="noopener noreferrer">
-            <Card key={idx}>
+            <a key={idx} href={ed.url} target="_blank" rel="noopener noreferrer">
+            <Card>
                 <img src={ed.logo} alt={ed.org} className="mb-2 w-150 h-50 rounded-2xl"/>
               
               <div className="flex items-start justify-between gap-4">
